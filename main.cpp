@@ -8,10 +8,10 @@
 using namespace std;
 #define NUM_THREADS 10
 #define NAME_LINE   40
-#define EASY 0
+#define EASY 1
 #define MID 0
 #define JOIN_DETACH 0
-#define DIFF 1
+#define DIFF 0
 
 void* sayHello() {
     cout << "Hello Robot!" << endl;
