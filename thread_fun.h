@@ -11,6 +11,8 @@
 #include <windows.h>
 #include <unistd.h>
 #include <strstream>
+#include <mutex>
+#include <condition_variable>
 using namespace std;
 #define NUM_THREADS 10
 #define NAME_LINE   40
@@ -20,6 +22,8 @@ void* sayHello1();
 void* sayHello2();
 void *PrintHello(void *threadid);
 void *wait(void *t);
+void *print_msg(void *arg);
+void *print_msg2(void *arg);
 DWORD WINAPI ThreadProcSayHello(LPVOID lpParameter);
 DWORD WINAPI ThreadProc(LPVOID lpParameter);
 DWORD WINAPI ThreadProc2(LPVOID lpParameter);

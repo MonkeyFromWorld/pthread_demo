@@ -2,11 +2,13 @@
 
 #define EASY 0
 #define MID 0
-#define MID2 1
+#define MID2 0
 #define JOIN_DETACH 0
 #define DIFF 0
-extern HANDLE g_hMutex;//互斥量
+#define ANOTHER_FUN 1
 
+extern HANDLE g_hMutex;//互斥量
+extern pthread_mutex_t mutex;
 int main() {
 #if EASY
     // 定义线程的 id 变量，多个变量使用数组
@@ -24,7 +26,7 @@ int main() {
     int index[NUM_THREADS];
     int rc, i;
     for(i=0; i<NUM_THREADS; i++) {
-        cout << "main(),创建线程: " << i << "\n";
+        cout << "main(),创建线程: " << i << endl;
         index[i] = i;
         // 传入的时候必须强制转换为void* 类型，即无类型指针
         rc = pthread_create(&threads[i], nullptr, reinterpret_cast<void *(*)(void *)>(PrintHello), (void *)&(index[i]));
@@ -35,7 +37,7 @@ int main() {
     }
     pthread_exit(nullptr);
 #endif
-#ifdef MID2
+#if MID2
     // 定义线程的 id 变量，多个变量使用数组
     /*
     pthread_t tids[NUM_THREADS];
@@ -46,6 +48,7 @@ int main() {
             cout << "pthread_create error: error_code=" << ret << endl;
     }
      */
+
     g_hMutex = CreateMutex(NULL, FALSE, NULL);
     //创建第一个子线程
     HANDLE hThread1 = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(sayHello1), NULL, 0, NULL);
@@ -199,6 +202,25 @@ int main() {
     }
 
     system("pause");
+#endif
+#if ANOTHER_FUN
+    pthread_t id1;
+    pthread_t id2;
+    pthread_mutex_init(&mutex,NULL);
+    //pthread_mutexattr_setpshared(reinterpret_cast<pthread_mutexattr_t *>(&mutex), 0);
+    pthread_create(&id1,NULL,print_msg,NULL);
+    pthread_create(&id2,NULL,print_msg2,NULL);
+    pthread_join(id1,NULL);  //守护thread1结束
+    //pthread_join(id2,NULL);  //守护thread2结束
+    int i=0;
+    for(i=0;i<20;i++)
+    {
+        //pthread_mutex_lock(&mutex);  //mutex加锁
+        printf("主线程 : %d\n",i);
+        //usleep(200);
+        //pthread_mutex_unlock(&mutex);  //mutex解锁
+    }
+    pthread_mutex_destroy(&mutex);
 #endif
     return 0;
 }

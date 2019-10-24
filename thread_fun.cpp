@@ -4,7 +4,7 @@
 
 #include "thread_fun.h"
 HANDLE g_hMutex = nullptr;//互斥量
-
+pthread_mutex_t mutex;
 // 线程的运行函数
 void* say_hello(void* args)
 {
@@ -13,12 +13,12 @@ void* say_hello(void* args)
 }
 
 void* sayHello1() {
-    WaitForSingleObject(g_hMutex, INFINITE);
     for(int i=0; i<NUM_THREADS; i++) {
+        WaitForSingleObject(g_hMutex, INFINITE);
         cout << "Hello Robot!" << endl;
+        ReleaseMutex(g_hMutex);//释放互斥量锁
         //Sleep(10);
     }
-    ReleaseMutex(g_hMutex);//释放互斥量锁
     return nullptr;
 }
 
@@ -122,3 +122,31 @@ DWORD WINAPI SaleTicket(LPVOID lpParameter) {
     }
     return 0L;
 }
+
+void *print_msg(void *arg) {
+    int i=0;
+
+    for(i=0;i<20;i++)
+    {
+        pthread_mutex_lock(&mutex);  //mutex加锁
+        printf("output : %d\n",i);
+        //usleep(200);
+        pthread_mutex_unlock(&mutex);  //mutex解锁
+    }
+
+}
+
+void *print_msg2(void *arg) {
+    int i=0;
+
+    for(i=0;i<20;i++)
+    {
+        pthread_mutex_lock(&mutex);  //mutex加锁
+        printf("output2 : %d\n",i);
+        //usleep(200);
+        pthread_mutex_unlock(&mutex);  //mutex解锁
+    }
+
+}
+
+
