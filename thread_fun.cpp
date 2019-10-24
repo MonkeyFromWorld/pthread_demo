@@ -5,13 +5,30 @@
 #include "thread_fun.h"
 HANDLE g_hMutex = nullptr;//互斥量
 
-void* sayHello() {
+// 线程的运行函数
+void* say_hello(void* args)
+{
+    cout << "Hello Runoob！" << endl;
+    return 0;
+}
+
+void* sayHello1() {
+    WaitForSingleObject(g_hMutex, INFINITE);
+    for(int i=0; i<NUM_THREADS; i++) {
+        cout << "Hello Robot!" << endl;
+        //Sleep(10);
+    }
+    ReleaseMutex(g_hMutex);//释放互斥量锁
+    return nullptr;
+}
+
+void* sayHello2() {
+
     for(int i=0; i<NUM_THREADS; i++) {
         WaitForSingleObject(g_hMutex, INFINITE);
-        cout << "Hello Robot!" << endl;
-        Sleep(50);
-        //释放互斥量锁
-        ReleaseMutex(g_hMutex);
+        cout << "Hello Robot!,2," << endl;
+        //Sleep(10);
+        ReleaseMutex(g_hMutex);//释放互斥量锁
     }
     return nullptr;
 }

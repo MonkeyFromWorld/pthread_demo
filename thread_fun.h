@@ -16,6 +16,8 @@ using namespace std;
 #define NAME_LINE   40
 
 void* sayHello();
+void* sayHello1();
+void* sayHello2();
 void *PrintHello(void *threadid);
 void *wait(void *t);
 DWORD WINAPI ThreadProcSayHello(LPVOID lpParameter);

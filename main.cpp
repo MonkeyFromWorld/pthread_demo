@@ -48,18 +48,18 @@ int main() {
      */
     g_hMutex = CreateMutex(NULL, FALSE, NULL);
     //创建第一个子线程
-    HANDLE hThread1 = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(sayHello), NULL, 0, NULL);
-    //创建第二个子线程
-    HANDLE hThread2 = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(sayHello), NULL, 0, NULL);
-    //关闭线程
+    HANDLE hThread1 = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(sayHello1), NULL, 0, NULL);
     CloseHandle(hThread1);
+    //创建第二个子线程
+    HANDLE hThread2 = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(sayHello2), NULL, 0, NULL);
+    //关闭线程
     CloseHandle(hThread2);
     for (int i = 0; i < NUM_THREADS; ++ i)
     {
         //请求获得一个互斥量锁
         WaitForSingleObject(g_hMutex, INFINITE);
         cout << "主线程 === " << i << endl;
-        Sleep(50);
+        //Sleep(50);
         //释放互斥量锁
         ReleaseMutex(g_hMutex);
     }
